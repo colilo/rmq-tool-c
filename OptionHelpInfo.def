@@ -1,0 +1,60 @@
+char *optionHelpInfo[] = { {"show usage"}, /* ? */
+                           {""}, /* @ */
+                           {"multi ack every"}, /* A */
+                           {""}, /* B */
+                           {"producer message count"}, /* C */
+                           {"consumer message count"}, /* D */
+                           {""}, /* E */
+                           {""}, /* F */
+                           {""}, /* G */
+                           {"consumer connection URI"}, /* H */
+                           {""}, /* I */
+                           {""}, /* J */
+                           {"use random routing key per message"}, /* K */
+                           {""}, /* L */
+                           {"frame max"}, /* M */
+                           {""}, /* N */
+                           {""}, /* O */
+                           {""}, /* P */
+                           {"channel prefetch count"}, /* Q */
+                           {"consumer rate limit"}, /* R */
+                           {""}, /* S */
+                           {""}, /* T */
+                           {""}, /* U */
+                           {""}, /* V */
+                           {""}, /* W */
+                           {""}, /* X */
+                           {""}, /* Y */
+                           {""}, /* Z */
+                           {""}, /* [ */
+                           {""}, /* \ */
+                           {""}, /* ] */
+                           {""}, /* ^ */
+                           {""}, /* _ */
+                           {""}, /* ` */
+                           {"auto ack"}, /* a */
+                           {"heartbeat interval"}, /* b */
+                           {"max unconfirmed publishes"}, /* c */
+                           {""}, /* d */
+                           {"exchange name"}, /* e */
+                           {"message flag(persisten, immediate)"}, /* f */
+                           {""}, /* g */
+                           {"producer connection URI"}, /* h */
+                           {"sampling interval in seconds"}, /* i */
+                           {""}, /* j */
+                           {"routing key"}, /* k */
+                           {"latency limitation"}, /* l */
+                           {"producer tx size"}, /* m */
+                           {"consumer tx size"}, /* n */
+                           {""}, /* o */
+                           {"allow use of predeclared objects"}, /* p */
+                           {"consumer prefetch count"}, /* q */
+                           {"producer rate limit"}, /* r */
+                           {"message size in bytes"}, /* s */
+                           {"exchange type"}, /* t */
+                           {"queue name"}, /* u */
+                           {""}, /* v */
+                           {""}, /* w */
+                           {"producer count"}, /* x */
+                           {"consumer count"}, /* y */
+                           {"run duration in seconds(unlimited by default)"}, /* z */ };
