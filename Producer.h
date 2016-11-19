@@ -32,16 +32,16 @@ private:
             Collections.synchronizedSortedSet(new TreeSet<Long>());
 
 public:
-    Producer(Channel channel, string exchangeName, string id, bool randomRoutingKey, std::vector<std::string> flags, int txSize,
+    Producer(Channel channel, string exchangeName, string id, bool randomRoutingKey, std::set<std::string> flags, int txSize,
              float rateLimit, int msgLimit, int minMsgSize, int timeLimit, long confirm, Stats stats) {
 
         _channel = channel;
         _exchangeName = exchangeName;
         _id = id;
         _randomRoutingKey = randomRoutingKey;
-        _mandatory = flags.contains("mandatory");
-        _immediate = flags.contains("immediate");
-        _persistent = flags.contains("persistent");
+        _mandatory = (flags.find("mandatory") != flag.end());
+        _immediate = (flags.find("immediate") != flag.end());
+        _persistent = (flags.find("persistent" != flag.end()));
         _txSize = txSize;
         _rateLimit = rateLimit;
         _msgLimit = msgLimit;

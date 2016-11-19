@@ -81,8 +81,7 @@ void Producer::run() {
     }
 }
 
-void Producer::publish(byte[] msg)
-throws IOException {
+void Producer::publish(std::ostringstream msg) throws IOException {
 
         unconfirmedSet.add(channel.getNextPublishSeqNo());
         channel.basicPublish(exchangeName, randomRoutingKey ? UUID.randomUUID().toString() : id,
@@ -91,8 +90,8 @@ throws IOException {
         msg);
 }
 
-byte[] Producer::createMessage(int sequenceNumber)
-throws IOException {
+std::ostringstream Producer::createMessage(int sequenceNumber) throws IOException
+{
 
         ByteArrayOutputStream acc = new ByteArrayOutputStream();
         DataOutputStream d = new DataOutputStream(acc);

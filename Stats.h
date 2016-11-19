@@ -34,7 +34,13 @@ class Stats {
         Stats(long interval, long latencyLimitation) {
             _interval = interval;
             _latencyLimitation = latencyLimitation; // nanoseconds
-            _startTime = System.currentTimeMillis();
+
+            struct timeval tv;
+
+            gettimeofday(&tv, NULL);
+
+            _startTime = tv.tv_sec * 1000000ul + tv.tv_usec;
+//            _startTime = System.currentTimeMillis();
             reset(_startTime);
         }
 

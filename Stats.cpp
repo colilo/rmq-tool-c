@@ -4,6 +4,7 @@
 
 #include <sys/time.h>
 #include <cstddef>
+#include <climits>
 #include "Stats.h"
 
 void Stats::reset(long t) {
@@ -15,8 +16,8 @@ void Stats::reset(long t) {
     _nackCountInterval = 0;
     _recvCountInterval = 0;
 
-    _minLatency = Long.MAX_VALUE;
-    _maxLatency = Long.MIN_VALUE;
+    _minLatency = LONG_MAX;
+    _maxLatency = LONG_MIN;
     _latencyCountInterval = 0;
     _cumulativeLatencyInterval = 0L;
     _acceptableLatencyCountInterval = 0L;
@@ -63,8 +64,8 @@ void Stats::handleRecv(long latency) {
     _recvCountInterval++;
     _recvCountTotal++;
     if (latency > 0) {
-        _minLatency = Math.min(_minLatency, latency);
-        _maxLatency = Math.max(_maxLatency, latency);
+        _minLatency = _minLatency > latency ? latency : _minLatency;
+        _maxLatency = _maxLatency < latency ? latency : _maxLatency;
         _cumulativeLatencyInterval += latency;
         _cumulativeLatencyTotal += latency;
         _latencyCountInterval++;
