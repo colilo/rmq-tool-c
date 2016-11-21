@@ -2,16 +2,20 @@
 // Created by colilo on 16-11-15.
 //
 
+#include <sys/time.h>
+#include <sstream>
+#include <cstdlib>
 #include "Producer.h"
+#include "Stats.h"
 
 void Producer::handleReturn(int replyCode,
                   String replyText,
                   String exchange,
                   String routingKey,
                   AMQP.BasicProperties properties,
-        byte[] body)
-throws IOException {
-        stats.handleReturn();
+                  char *body) throw ()
+{
+    _stats.handleReturn();
 }
 
 void Producer::handleAck(long seqNo, boolean multiple) {
@@ -22,8 +26,8 @@ void Producer::handleNack(long seqNo, boolean multiple) {
     handleAckNack(seqNo, multiple, true);
 }
 
-void Producer::handleAckNack(long seqNo, boolean multiple,
-                   boolean nack) {
+void Producer::handleAckNack(long seqNo, boolean multiple, boolean nack)
+{
     int numConfirms = 0;
     if (multiple) {
         SortedSet<Long> confirmed = unconfirmedSet.headSet(seqNo + 1);
@@ -34,9 +38,9 @@ void Producer::handleAckNack(long seqNo, boolean multiple,
         numConfirms = 1;
     }
     if (nack) {
-        stats.handleNack(numConfirms);
+        _stats.handleNack(numConfirms);
     } else {
-        stats.handleConfirm(numConfirms);
+        _stats.handleConfirm(numConfirms);
     }
 
     if (confirmPool != null) {
@@ -47,7 +51,8 @@ void Producer::handleAckNack(long seqNo, boolean multiple,
 
 }
 
-void Producer::run() {
+void Producer::run()
+{
     long now;
     long startTime;
     startTime = now = System.currentTimeMillis();
@@ -63,7 +68,8 @@ void Producer::run() {
             if (confirmPool != null) {
                 confirmPool.acquire();
             }
-            publish(createMessage(totalMsgCount));
+            createMessage(totalMsgCount);
+            publish();
             totalMsgCount++;
             msgCount++;
 
@@ -81,30 +87,22 @@ void Producer::run() {
     }
 }
 
-void Producer::publish(std::ostringstream msg) throws IOException {
+void Producer::publish() throw ()
+{
 
         unconfirmedSet.add(channel.getNextPublishSeqNo());
         channel.basicPublish(exchangeName, randomRoutingKey ? UUID.randomUUID().toString() : id,
         mandatory, immediate,
         persistent ? MessageProperties.MINIMAL_PERSISTENT_BASIC : MessageProperties.MINIMAL_BASIC,
-        msg);
+        _message);
 }
 
-std::ostringstream Producer::createMessage(int sequenceNumber) throws IOException
+char *Producer::createMessage(int sequenceNumber) throw()
 {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned long nano = tv.tv_sec * 1000000ul + tv.tv_usec;
 
-        ByteArrayOutputStream acc = new ByteArrayOutputStream();
-        DataOutputStream d = new DataOutputStream(acc);
-        long nano = System.nanoTime();
-        d.writeInt(sequenceNumber);
-        d.writeLong(nano);
-        d.flush();
-        acc.flush();
-        byte[] m = acc.toByteArray();
-        if (m.length <= message.length) {
-            System.arraycopy(m, 0, message, 0, m.length);
-            return message;
-        } else {
-            return m;
-        }
+    memcpy(_message, (char *)&sequenceNumber, sizeof(sequenceNumber));
+    memcpy(_message + sizeof(sequenceNumber), (char *)&nano, sizeof(nano));
 }

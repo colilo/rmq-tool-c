@@ -25,7 +25,7 @@ private:
     float _rateLimit;
     Stats _stats;
 
-    string _message;
+    char *_message;
 
     Semaphore _confirmPool;
     SortedSet <Long> unconfirmedSet =
@@ -46,7 +46,7 @@ public:
         _rateLimit = rateLimit;
         _msgLimit = msgLimit;
         _timeLimit = 1000L * timeLimit;
-        _message = new byte[minMsgSize];
+        _message = new char[minMsgSize];
         if (confirm > 0) {
             _confirmPool = new Semaphore((int) confirm);
         }
