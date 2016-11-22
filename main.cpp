@@ -6,9 +6,11 @@
 #include <cstdlib>
 #include <iomanip>
 #include <sstream>
+#include <list>
 #include "Parameter.h"
 #include "Stats.h"
 #include "OptionHelpInfo.def"
+#include "Connection.h"
 
 class PrintStats : Stats {
 private:
@@ -16,16 +18,14 @@ private:
     bool _recvStatsEnabled;
     bool _returnStatsEnabled;
     bool _confirmStatsEnabled;
-    bool _startConsumer;
 
 public:
     PrintStats(long interval, long latencyLimitation, bool sendStatsEnabled, bool recvStatsEnabled,
-               bool returnStatsEnabled, bool confirmStatsEnabled, bool startConsumer) : Stats(interval, latencyLimitation){
+               bool returnStatsEnabled, bool confirmStatsEnabled) : Stats(interval, latencyLimitation){
         _sendStatsEnabled = sendStatsEnabled;
         _recvStatsEnabled = recvStatsEnabled;
         _returnStatsEnabled = returnStatsEnabled;
         _confirmStatsEnabled = confirmStatsEnabled;
-        _startConsumer = startConsumer;
     }
 
 
@@ -60,7 +60,7 @@ protected:
 //                          _cumulativeLatencyInterval / (1000L * _latencyCountInterval) + "/" +
 //                          _maxLatency/1000L + " ms" :
 //                          ""));
-        if (_startConsumer) {
+        if (_recvStatsEnabled) {
             std::cout << "latency lower than " << _latencyLimitation / 1000L << "ms is "
                       << _acceptableLatencyCountInterval << ", " << _recvCountInterval << " percent "
                       << _acceptableLatencyCountInterval * 100 / _recvCountInterval << "%, average percent"
@@ -266,5 +266,42 @@ int main(int argc, char *argv[])
                 abort();
         }
     }
+
+    PrintStats stats = PrintStats(samplingInterval, param.getLatencyLimitation(), param.getProducerCount() > 0,
+                                  param.getConsumerCount() > 0, (param.hasFlag(std::string("mandatory")) || param.hasFlag(std::string("immediate"))),
+                                  (param.getConfirm() != -1));
+    pthread_t ctid[1000];
+    pthread_t ptid[1000];
+    std::vector<Connection> cConnectionList;
+    std::vector<Connection> pConnectionList;
+    for(int i = 0; i < param.getConsumerCount(); i++) {
+        Connection conn = new Connection(curi, );
+        cConnectionList.push_back(conn);
+        Consumer c = Consumer(channel, param, stats);
+        pthread_create(ctid[i], 0, func, (void *)&conn);
+    }
+
+    for(int i = 0; i < param.getProducerCount(); i++) {
+        Connection conn = new Connection(puri, );
+        pConnectionList.push_back(conn);
+        Producer p = Producer(channel, param, stats);
+        pthread_create(ptid[i], 0, func, (void *)&conn);
+    }
+
+
+    for(int i = 0; i < param.getConsumerCount(); i++) {
+        pthread_join(ctid[i], cret);
+        cConnectionList.
+    }
+
+    for(int i = 0; i < param.getProducerCount(); i++) {
+        pthread_join(ptid[i], pret);
+    }
+
+
+
+
+
+
     return 0;
 }

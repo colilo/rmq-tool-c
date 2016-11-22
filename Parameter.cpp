@@ -4,88 +4,171 @@
 
 #include <string>
 #include "Parameter.h"
+#include "Connection.h"
 
 
 void Parameter::setExchangeType(std::string exchangeType) {
     _exchangeType = exchangeType;
 }
 
+std::string Parameter::getExchangeType() {
+    return _exchangeType;
+}
+
 void Parameter::setExchangeName(std::string exchangeName) {
     _exchangeName = exchangeName;
+}
+
+std::string Parameter::getExchangeName() {
+    return _exchangeName;
 }
 
 void Parameter::setQueueName(std::string queueName) {
     _queueName = queueName;
 }
 
+std::string Parameter::getQueueName() {
+    return _queueName;
+}
+
 void Parameter::setRoutingKey(std::string routingKey) {
     _routingKey = routingKey;
+}
+
+std::string Parameter::getRoutingKey() {
+    return _routingKey;
 }
 
 void Parameter::setRandomRoutingKey(bool randomRoutingKey) {
     _randomRoutingKey = randomRoutingKey;
 }
 
+bool Parameter::getRandomRoutingKey() {
+    return _randomRoutingKey;
+}
+
 void Parameter::setProducerRateLimit(float producerRateLimit) {
     _producerRateLimit = producerRateLimit;
+}
+
+float Parameter::getProducerRateLimit() {
+    return _producerRateLimit;
 }
 
 void Parameter::setProducerCount(int producerCount) {
     _producerCount = producerCount;
 }
 
+int Parameter::getProducerCount() {
+    return _producerCount;
+}
+
 void Parameter::setConsumerRateLimit(float consumerRateLimit) {
     _consumerRateLimit = consumerRateLimit;
+}
+
+float Parameter::getConsumerRateLimit() {
+    return _consumerRateLimit;
 }
 
 void Parameter::setConsumerCount(int consumerCount) {
     _consumerCount = consumerCount;
 }
 
+int Parameter::getConsumerCount() {
+    return _consumerCount;
+}
+
 void Parameter::setProducerTxSize(int producerTxSize) {
     _producerTxSize = producerTxSize;
+}
+
+int Parameter::getProducerTxSize() {
+    return _producerTxSize;
 }
 
 void Parameter::setConsumerTxSize(int consumerTxSize) {
     _consumerTxSize = consumerTxSize;
 }
 
+int Parameter::getConsumerTxSize() {
+    return _consumerTxSize;
+}
+
 void Parameter::setConfirm(long confirm) {
     _confirm = confirm;
 }
 
+long Parameter::getConfirm() {
+    return _confirm;
+}
+
 void Parameter::setLatencyLimitation(long latencyLimitation) { _latencyLimitation = latencyLimitation; }
+
+long Parameter::getLatencyLimitation() { return _latencyLimitation; }
 
 void Parameter::setAutoAck(bool autoAck) {
     _autoAck = autoAck;
+}
+
+bool Parameter::getAutoAck() {
+    return _autoAck;
 }
 
 void Parameter::setMultiAckEvery(int multiAckEvery) {
     _multiAckEvery = multiAckEvery;
 }
 
+int Parameter::getMultiAckEvery() {
+    return _multiAckEvery;
+}
+
 void Parameter::setChannelPrefetch(int channelPrefetch) {
     _channelPrefetch = channelPrefetch;
+}
+
+int Parameter::getChannelPrefetch() {
+    return _channelPrefetch;
 }
 
 void Parameter::setConsumerPrefetch(int consumerPrefetch) {
     _consumerPrefetch = consumerPrefetch;
 }
 
+int Parameter::getConsumerPrefetch() {
+    return _consumerPrefetch;
+}
+
 void Parameter::setMinMsgSize(int minMsgSize) {
     _minMsgSize = minMsgSize;
+}
+
+int Parameter::getMinMsgSize() {
+    return _minMsgSize;
 }
 
 void Parameter::setTimeLimit(int timeLimit) {
     _timeLimit = timeLimit;
 }
 
+int Parameter::getTimeLimit() {
+    return _timeLimit;
+}
+
 void Parameter::setProducerMsgCount(int producerMsgCount) {
     _producerMsgCount = producerMsgCount;
 }
 
+int Parameter::getProducerMsgCount() {
+    return _producerMsgCount;
+}
+
 void Parameter::setConsumerMsgCount(int consumerMsgCount) {
     _consumerMsgCount = consumerMsgCount;
+}
+
+int Parameter::getConsumerMsgCount() {
+    return _consumerMsgCount
 }
 
 void Parameter::setMsgCount(int msgCount) {
@@ -94,40 +177,27 @@ void Parameter::setMsgCount(int msgCount) {
 }
 
 void Parameter::setFlags(std::string flag) {
-    _flags.push_back(flag);
+    _flags.insert(flag);
+}
+
+bool Parameter::hasFlag(std::string flag) {
+    return (_flags.count(flag)==1);
 }
 
 void Parameter::setAutoDelete(bool autoDelete) {
     _autoDelete = autoDelete;
 }
 
+bool Parameter::getAutoDelete() {
+    return _autoDelete;
+}
+
 void Parameter::setPredeclared(bool predeclared) {
     _predeclared = predeclared;
 }
 
-int Parameter::getConsumerCount() {
-    return _consumerCount;
-}
-
-int Parameter::getProducerCount() {
-    return _producerCount;
-}
-
-int Parameter::getMinMsgSize() {
-    return _minMsgSize;
-}
-
-long Parameter::getLatencyLimitation()
-{
-    return _latencyLimitation;
-}
-
-std::string Parameter::getRoutingKey() {
-    return _routingKey;
-}
-
-bool Parameter::getRandomRoutingKey() {
-    return _randomRoutingKey;
+bool Parameter::getPredeclared() {
+    return _predeclared;
 }
 
 Producer Parameter::createProducer(Connection connection, Stats stats, std::string id) throws IOException {
@@ -159,8 +229,10 @@ Consumer Parameter::createConsumer(Connection connection, Stats stats, std::stri
 }
 
 bool Parameter::shouldConfigureQueue() {
-    return consumerCount == 0 && !queueName.equals("");
+    return _consumerCount == 0 && _queueName != "";
 }
+
+
 
 std::string Parameter::configureQueue(Connection connection, std::string id) throws IOException {
         Channel channel = connection.createChannel();

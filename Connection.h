@@ -6,13 +6,15 @@
 #define AMQP_TOOL_CONNECTION_H
 
 #include <cstddef>
+#include <iostream>
+#include <amqp_tcp_socket.h>
 #include "amqp.h"
 #include "amqp_framing.h"
 
 class Connection {
     amqp_connection_state_t _conn;
     struct amqp_connection_info _ci;
-    int heartbeat;
+    int _heartbeat;
 
 public:
     Connection(char *url, )
@@ -20,11 +22,11 @@ public:
         int status;
         amqp_status_enum res;
         amqp_rpc_reply_t ret;
-        amqp_channel_open_ok_t method;
+        amqp_channel_open_ok_t *method;
         amqp_socket_t *socket = NULL;
         amqp_default_connection_info(&_ci);
 
-        res = amqp_parse_url(url, &_ci);
+        res = (amqp_status_enum) amqp_parse_url(url, &_ci);
         if (res != AMQP_STATUS_OK) {
             std::cout << "Parsing URL " << url << "failed" << std::endl;
         }
@@ -49,14 +51,14 @@ public:
             std::cout << "opening socket to " << _ci.host << ":" << _ci.port << std::endl;
         }
 
-        ret = amqp_login(_conn, _ci.vhost, 0, 131072, _heartbead, AMQP_SASL_METHOD_PLAIN, _ci.user, _ci.password);
+        ret = amqp_login(_conn, _ci.vhost, 0, 131072, _heartbeat, AMQP_SASL_METHOD_PLAIN, _ci.user, _ci.password);
         if (ret.reply_type != AMQP_RESPONSE_NORMAL) {
             std::cout << "logging in to AMQP server failed" << std::endl;
         }
 
         method = amqp_channel_open(_conn, 1);
         if (method == NULL) {
-            amqp_rpc_reply_t r = amqp_get_rpc_reply(conn);
+            amqp_rpc_reply_t r = amqp_get_rpc_reply(_conn);
             std::cerr << "opening channel failed" << r.reply_type << std::endl;
         }
     }

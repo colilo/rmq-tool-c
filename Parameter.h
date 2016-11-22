@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include "Producer.h"
 #include "Consumer.h"
 
@@ -31,7 +32,7 @@ class Parameter {
         std::string _queueName = "";
         std::string _routingKey = NULL;
         bool _randomRoutingKey = false;
-        std::vector<std::string> _flags;
+        std::set<std::string> _flags;
         int _multiAckEvery = 0;
         bool _autoAck = true;
         bool _autoDelete = false;
@@ -39,66 +40,80 @@ class Parameter {
 
     public:
         void setExchangeType(std::string exchangeType);
+        std::string getExchangeType();
 
         void setExchangeName(std::string exchangeName);
+        std::string getExchangeName();
 
         void setQueueName(std::string queueName);
+        std::string getQueueName();
 
         void setRoutingKey(std::string routingKey);
+        std::string getRoutingKey();
 
         void setRandomRoutingKey(bool randomRoutingKey);
+        bool getRandomRoutingKey();
 
         void setProducerRateLimit(float producerRateLimit);
+        float getProducerRateLimit();
 
         void setProducerCount(int producerCount);
+        int getProducerCount();
 
         void setConsumerRateLimit(float consumerRateLimit);
+        float getConsumerRateLimit();
 
         void setConsumerCount(int consumerCount);
+        int getConsumerCount();
 
         void setProducerTxSize(int producerTxSize);
+        int getProducerTxSize();
 
         void setConsumerTxSize(int consumerTxSize);
+        int getConsumerTxSize();
 
         void setConfirm(long confirm);
+        long getConfirm();
 
         void setLatencyLimitation(long latencyLimitation);
+        long getLatencyLimitation();
 
         void setAutoAck(bool autoAck);
+        bool getAutoAck();
 
         void setMultiAckEvery(int multiAckEvery);
+        int getMultiAckEvery();
 
         void setChannelPrefetch(int channelPrefetch);
+        int getChannelPrefetch();
 
         void setConsumerPrefetch(int consumerPrefetch);
+        int getConsumerPrefetch();
 
         void setMinMsgSize(int minMsgSize);
+        int getMinMsgSize();
 
         void setTimeLimit(int timeLimit);
+        int getTimeLimit();
 
         void setProducerMsgCount(int producerMsgCount);
+        int getProducerMsgCount();
 
         void setConsumerMsgCount(int consumerMsgCount);
+        int getConsumerMsgCount();
 
         void setMsgCount(int msgCount);
 
         void setFlags(std::string flag);
 
+        bool hasFlag(std::string flag);
+
         void setAutoDelete(bool autoDelete);
+        bool getAutoDelete();
 
         void setPredeclared(bool predeclared);
+        bool getPredeclared();
 
-        int getConsumerCount();
-
-        int getProducerCount();
-
-        int getMinMsgSize();
-
-        long getLatencyLimitation();
-
-        std::string getRoutingKey();
-
-        bool getRandomRoutingKey();
 
         Producer createProducer(Connection connection, Stats stats, std::string id) throws IOException;
 

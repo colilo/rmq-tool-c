@@ -7,6 +7,7 @@
 
 #include <string>
 #include "ProducerConsumerBase.h"
+#include "Parameter.h"
 #include "Stats.h"
 
 class Consumer : ProducerConsumerBase {
@@ -25,20 +26,18 @@ private:
     CountDownLatch   _latch = new CountDownLatch(1);
 
 public:
-    Consumer(Channel channel, String id,
-                String queueName, int txSize, bool autoAck,
-                int multiAckEvery, Stats stats, float rateLimit, int msgLimit, int timeLimit) {
+    Consumer(Channel channel, Parameter param, Stats stats) {
 
         _channel       = channel;
-        _id            = id;
-        _queueName     = queueName;
-        _rateLimit     = rateLimit;
-        _txSize        = txSize;
-        _autoAck       = autoAck;
-        _multiAckEvery = multiAckEvery;
+        _id            = param.getRoutingKey();
+        _queueName     = param.getQueueName();
+        _rateLimit     = param.getConsumerRateLimit();
+        _txSize        = param.getConsumerTxSize();
+        _autoAck       = param.getAutoAck();
+        _multiAckEvery = param.getMultiAckEvery();
         _stats         = stats;
-        _msgLimit      = msgLimit;
-        _timeLimit     = 1000L * timeLimit;
+        _msgLimit      = param.getMinMsgSize();
+        _timeLimit     = param.getTimeLimit();
         _latch         = new CountDownLatch(1);
     }
 
